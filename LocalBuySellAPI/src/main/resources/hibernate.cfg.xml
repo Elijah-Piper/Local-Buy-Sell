@@ -1,0 +1,19 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/buysell</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">SuperStrongMySQLRootPassword6478!@</property>
+        <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
+        <property name="hbm2ddl.auto">update</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <property name="connection.pool_size">3</property>
+        <mapping class="com.genspark.LocalBuySellAPI.Entity.Account" />
+        <mapping class="com.genspark.LocalBuySellAPI.Entity.Listing" />
+    </session-factory>
+
+</hibernate-configuration>
