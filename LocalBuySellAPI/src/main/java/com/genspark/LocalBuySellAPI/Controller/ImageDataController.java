@@ -20,7 +20,7 @@ public class ImageDataController {
 
     @GetMapping("/index")
     public String index() {
-        return "<p>Listing endpoints:</p>" +
+        return "<p>Image endpoints:</p>" +
                 "<ul>" +
                 "<li>GET -> image/{imageId}</li>" +
                 "<li>POST -> image/createprofilepicture/{accountId} + 'image' request parameter file (.jpg, .png, etc.)</li>" +
