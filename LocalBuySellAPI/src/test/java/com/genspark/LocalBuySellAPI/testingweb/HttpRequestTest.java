@@ -30,4 +30,11 @@ public class HttpRequestTest {
                 "http://localhost:" + port + "/listing/index",
                 String.class)).contains("Listing endpoints:");
     }
+
+    @Test
+    public void imageDataIndexReturnsPopulatedString() throws Exception {
+        assertThat(this.restTemplate.getForObject(
+                "http://localhost:" + port + "/image/index",
+                String.class)).contains("Image endpoints:");
+    }
 }
