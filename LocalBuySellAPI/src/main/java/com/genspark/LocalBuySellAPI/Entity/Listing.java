@@ -2,16 +2,22 @@ package com.genspark.LocalBuySellAPI.Entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Listing {
 
     @Id
-    @Column(name = "listingId")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int listingId;
 
     private String title;
+
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = ImageData.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "listingId")
+    private List<ImageData> images;
+
+    private int price;
 
     private LocalDate listDate;
 
@@ -20,6 +26,26 @@ public class Listing {
     public Listing() {
         this.isSold = false;
         this.listDate = LocalDate.now();
+    }
+
+    public List<ImageData> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ImageData> images) {
+        this.images = images;
+    }
+
+    public void addImage(ImageData imageData) {
+        this.images.add(imageData);
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public int getListingId() {
@@ -46,11 +72,11 @@ public class Listing {
         this.listDate = listDate;
     }
 
-    public boolean isSold() {
+    public boolean getIsSold() {
         return isSold;
     }
 
-    public void setSold(boolean sold) {
+    public void setIsSold(boolean sold) {
         isSold = sold;
     }
 
@@ -59,6 +85,8 @@ public class Listing {
         return "Listing{" +
                 "listingId=" + listingId +
                 ", title='" + title + '\'' +
+                ", no. of photos=" + images.size() +
+                ", price=" + price +
                 ", listDate=" + listDate +
                 ", isSold=" + isSold +
                 '}';
