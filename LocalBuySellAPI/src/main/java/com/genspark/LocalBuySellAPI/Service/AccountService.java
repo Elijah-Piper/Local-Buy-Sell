@@ -15,4 +15,5 @@ public interface AccountService {
 
     void deleteById(int accountId);
 
+    Account editAccount(Account edited, int accountId);
 }

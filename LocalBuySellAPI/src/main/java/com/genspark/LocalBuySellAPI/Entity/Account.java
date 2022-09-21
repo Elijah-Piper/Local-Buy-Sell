@@ -7,11 +7,11 @@ import java.util.List;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accountId;
 
     @OneToMany(fetch = FetchType.EAGER, targetEntity = Listing.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accountId", referencedColumnName = "accountId")
+    @JoinColumn(name = "accountId")
     private List<Listing> listings;
 
     private String email;
@@ -21,7 +21,19 @@ public class Account {
 
     private String phoneNumber;
 
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = ImageData.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "accountId")
+    private ImageData profilePicture;
+
     public Account() {
+    }
+
+    public ImageData getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ImageData profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public void addListing(Listing listing) {

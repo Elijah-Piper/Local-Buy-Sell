@@ -21,7 +21,8 @@ public class AccountController {
                 "<ul>" +
                 "<li>GET -> account/{accountId}</li>" +
                 "<li>GET -> account/all</li>" +
-                "<li>POST -> account/create + Account requestBody</li>" +
+                "<li>POST -> account/create + new Account requestBody</li>" +
+                "<li>PUT -> account/edit/{accountId} + edited Account requestBody</li>" +
                 "<li>DELETE -> account/delete/{accountId}</li>" +
                 "</ul>";
     }
@@ -44,6 +45,11 @@ public class AccountController {
     @DeleteMapping("/delete/{accountId}")
     public void deleteById(@PathVariable int accountId) {
         this.accountService.deleteById(accountId);
+    }
+
+    @PutMapping("/edit/{accountId}")
+    public Account edit(@PathVariable int accountId, @RequestBody Account account) {
+        return this.accountService.editAccount(account, accountId);
     }
 
 }
