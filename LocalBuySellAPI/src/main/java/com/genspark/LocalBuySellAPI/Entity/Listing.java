@@ -18,6 +18,7 @@ public class Listing {
 
     @OneToMany(fetch = FetchType.EAGER, targetEntity = ImageData.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "listingId")
+    @JsonIgnoreProperties("image")
     private List<ImageData> images;
 
     private int price;

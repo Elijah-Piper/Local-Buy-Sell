@@ -27,6 +27,7 @@ public class Account {
 
     @OneToOne(fetch = FetchType.EAGER, targetEntity = ImageData.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "accountId")
+    @JsonIgnoreProperties("image")
     private ImageData profilePicture;
 
     public Account() {
