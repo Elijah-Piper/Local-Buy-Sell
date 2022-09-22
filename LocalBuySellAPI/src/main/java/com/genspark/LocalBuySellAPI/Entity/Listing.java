@@ -16,6 +16,8 @@ public class Listing {
 
     private String title;
 
+    private String description;
+
     @OneToMany(fetch = FetchType.EAGER, targetEntity = ImageData.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "listingId")
     @JsonIgnoreProperties("image")
@@ -35,6 +37,14 @@ public class Listing {
     public Listing() {
         this.isSold = false;
         this.listDate = LocalDate.now();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Account getAccount() {
@@ -102,7 +112,8 @@ public class Listing {
         return "Listing{" +
                 "listingId=" + listingId +
                 ", title='" + title + '\'' +
-                ", no. of photos=" + images.size() +
+                ", description='" + description + '\'' +
+                ", images=" + images +
                 ", price=" + price +
                 ", listDate=" + listDate +
                 ", isSold=" + isSold +
