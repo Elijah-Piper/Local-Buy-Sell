@@ -58,6 +58,7 @@ public class ListingServiceImpl implements ListingService {
         Account account = session.get(Account.class, accountId);
 
         account.addListing(listing);
+        listing.setAccount(account);
 
         t.commit();
 

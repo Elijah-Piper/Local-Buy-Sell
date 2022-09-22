@@ -1,5 +1,8 @@
 package com.genspark.LocalBuySellAPI.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -23,9 +26,22 @@ public class Listing {
 
     private boolean isSold;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account")
+    @JsonIgnoreProperties("listings")
+    private Account account;
+
     public Listing() {
         this.isSold = false;
         this.listDate = LocalDate.now();
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public List<ImageData> getImages() {
@@ -89,6 +105,7 @@ public class Listing {
                 ", price=" + price +
                 ", listDate=" + listDate +
                 ", isSold=" + isSold +
+                ", account=" + account +
                 '}';
     }
 }

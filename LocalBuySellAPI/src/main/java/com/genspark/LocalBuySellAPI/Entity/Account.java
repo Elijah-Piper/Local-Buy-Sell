@@ -1,5 +1,9 @@
 package com.genspark.LocalBuySellAPI.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -10,8 +14,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accountId;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Listing.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accountId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "account")
+    @JsonIgnoreProperties("account")
     private List<Listing> listings;
 
     private String email;
