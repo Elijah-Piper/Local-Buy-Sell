@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,20 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account create(Account account) {
+        Configuration cfg = new Configuration();
+        cfg.configure("hibernate.cfg.xml");
+        SessionFactory factory = cfg.buildSessionFactory();
+        Session session = factory.openSession();
+
+        Query query = session.createQuery("from Account where email=:em");
+        query.setParameter("em", account.getEmail());
+
+        List<Account> list = query.list();
+
+        if (! list.isEmpty()) {
+            throw new RuntimeException("There is already an account registered for email :: " + account.getEmail());
+        }
+
         return this.accountDao.save(account);
     }
 
