@@ -18,12 +18,18 @@ public class Account {
     @JsonIgnoreProperties("account")
     private List<Listing> listings;
 
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     private String firstName;
     private String lastName;
 
     private String phoneNumber;
+
+    private String contactMethod;
 
     @OneToOne(fetch = FetchType.EAGER, targetEntity = ImageData.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "accountId")
@@ -31,6 +37,22 @@ public class Account {
     private ImageData profilePicture;
 
     public Account() {
+    }
+
+    public String getContactMethod() {
+        return contactMethod;
+    }
+
+    public void setContactMethod(String contactMethod) {
+        this.contactMethod = contactMethod;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public ImageData getProfilePicture() {
@@ -99,9 +121,12 @@ public class Account {
                 "accountId=" + accountId +
                 ", listings=" + listings +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", contactMethod='" + contactMethod + '\'' +
+                ", profilePicture=" + profilePicture +
                 '}';
     }
 }
