@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import AccountService from '../Service/AccountService';
 import ImageDataService from '../Service/ImageDataService';
 
@@ -24,7 +25,7 @@ class ListingCard extends React.Component {
 
     return (
       <Card style={{ width: '18rem', margin: '10px' }}>
-        <Card.Img style={{height: "17.852rem", width: "17.852rem", "object-fit": "cover"}} variant="top" src={ this.state.img } alt="img" />
+        <Card.Img style={{height: "17.852rem", width: "17.852rem", "objectFit": "cover"}} variant="top" src={ this.state.img } alt="img" />
         <Card.Body>
           <Card.Title>{ this.state.listing.title }</Card.Title>
           <Card.Text>
@@ -33,8 +34,9 @@ class ListingCard extends React.Component {
           <Card.Text>
             Asking price: ${ this.state.listing.price }
           </Card.Text>
-
-          <Button variant="primary">Details</Button>
+          <Link to={{pathname:"/listingdetails/" + this.state.listing.listingId}}>
+            <Button variant="primary">Details</Button>
+          </Link>
         </Card.Body>
       </Card>
     )

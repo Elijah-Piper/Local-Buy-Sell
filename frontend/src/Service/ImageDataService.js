@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { Buffer } from 'buffer';
 
 const IMAGE_DATA_API_URL = "http://localhost:8080/image";
 

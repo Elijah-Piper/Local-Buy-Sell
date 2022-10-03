@@ -21,11 +21,11 @@ class Listings extends React.Component {
     render() {
         return(
             // <div style={{"background-color": "lightgrey", "display": "flex", "flexDirection": "row", "height": "100%"}}>
-            <Container className="container-fluid mt-4" style={{"background-color": "lightgrey", "display": "flex", "flexDirection": "row"}}>
+            <Container className="container-fluid mt-4" style={{"backgroundColor": "lightgrey", "display": "flex", "flexDirection": "row"}}>
                 {
                     this.state.listings.map(
                         l => l.isSold ? 0 :
-                        <div key={ l.listingId}>
+                        <div key={ l.listingId }>
                             <ListingCard listing={ l } />
                         </div>
                     )
