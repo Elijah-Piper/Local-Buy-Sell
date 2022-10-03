@@ -12,6 +12,7 @@ Upon cloning the github repo:
     - Within the "frontend" directory, use the command "npm install" to install required dependencies
     - "npm start" wll then start up the development server for the frontend
     - The frontend configuration is already set up to interface with the backend, although by default, the backend will not populate any test data automatically.
+    - The frontend will, by default, be accessible from localhost:3030
 
 ## API endpoints
 1. "/account/**"
