@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountDao accountDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Account create(Account account) {
@@ -33,6 +37,8 @@ public class AccountServiceImpl implements AccountService {
 
         if (! list.isEmpty()) {
             throw new RuntimeException("There is already an account registered for email :: " + account.getEmail());
+        } else {
+            account.setPassword(this.passwordEncoder.encode(account.getPassword()));
         }
 
         return this.accountDao.save(account);
