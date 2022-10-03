@@ -2,7 +2,7 @@
 A community posting board for all your impromptu buying and selling needs.
 
 ## Installation
-Upon cloning the github repo, 
+Upon cloning the github repo:
 1. The "LocalBuySellAPI" directory will contain the Spring Boot backend API (JDK 18 required)
     - Two configuration files must be changed to for database to work locally: hibernate.cfg.xml and application.properties
         - Must replace with your own MySQL schema, MySQL username, and password
