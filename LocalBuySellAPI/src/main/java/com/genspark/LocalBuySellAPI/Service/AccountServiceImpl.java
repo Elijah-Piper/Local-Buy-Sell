@@ -8,9 +8,11 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +88,24 @@ public class AccountServiceImpl implements AccountService {
 
         session.close();
         factory.close();
+
+        return account;
+    }
+
+    @Transactional
+    @Override
+    public Account findAccountByEmail(String email) {
+        Configuration cfg = new Configuration();
+        cfg.configure("hibernate.cfg.xml");
+        SessionFactory factory = cfg.buildSessionFactory();
+        Session session = factory.openSession();
+
+        Account account = session.get(Account.class, email);
+
+        session.close();
+        factory.close();
+
+        System.out.println("\n\n\nAccount found by service: " + account + "\n\n\n");
 
         return account;
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000/")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("account/")
 public class AccountController {
@@ -34,7 +34,6 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public List<Account> getAll() {
         return this.accountService.getAll();
     }

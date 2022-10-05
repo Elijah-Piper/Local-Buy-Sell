@@ -3,7 +3,9 @@ package com.genspark.LocalBuySellAPI.Service;
 
 import com.genspark.LocalBuySellAPI.Entity.Account;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountService {
 
@@ -16,4 +18,7 @@ public interface AccountService {
     void deleteById(int accountId);
 
     Account editAccount(Account edited, int accountId);
+
+    @Transactional
+    Account findAccountByEmail(String email);
 }

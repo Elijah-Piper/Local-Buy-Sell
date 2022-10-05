@@ -1,18 +1,29 @@
 package com.genspark.LocalBuySellAPI.Security;
 
+import com.genspark.LocalBuySellAPI.Entity.Account;
+import com.genspark.LocalBuySellAPI.Service.AccountService;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
@@ -20,58 +31,50 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 public class ApplicationSecurityConfig {
 
     private final PasswordEncoder passwordEncoder;
+    private final RsaKeyProperties rsaKeys;
+    @Autowired
+    private AccountService accountService;
+    @Resource
+    private EmailDetailsService emailDetailsService;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, RsaKeyProperties rsaKeys) {
         this.passwordEncoder = passwordEncoder;
+        this.rsaKeys = rsaKeys;
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                .and()  // TODO : Once backend security is integrated, enable and implement xsrf token into frontend + remove .csrf().disable()
+        http.cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-//                .antMatchers("/account/index", "/listing/index", "/image/index").permitAll()
-                .antMatchers("/listing/**").permitAll()
-                .antMatchers("/account/**").permitAll()
-                .antMatchers("/image/**").permitAll()
-//                .antMatchers("/account/create", "/listing/create/*", "/image/createprofilepicture/*", "image/addlistingimage/*").permitAll()
-//                .antMatchers("/account/edit/*", "/listing/edit/*").permitAll()
-//                .antMatchers("/account/delete/*", "/listing/delete/*", "/image/delete/*").permitAll()
-//                .antMatchers("/account/all").hasRole(ApplicationUserRole.ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
-//                .formLogin()
-//                .and()
-//                .rememberMe() // Defaults to 2 weeks
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .clearAuthentication(true)
-//                .invalidateHttpSession(true)
-//                .deleteCookies("JSESSIONID", "remember-me");
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .httpBasic()
+                .and()
+                .authenticationProvider(authProvider());
         return http.build();
     }
 
     @Bean
-    protected UserDetailsService userDetailsService() {
-        UserDetails testUser = User.builder()
-                .username("testuser")
-                .password(passwordEncoder.encode("password"))
-                .roles(ApplicationUserRole.USER.name()) // ROLE_USER
-                .build();
+    public DaoAuthenticationProvider authProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(emailDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
+    }
 
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles(ApplicationUserRole.ADMIN.name())
-                .build();
+    @Bean
+    JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+    }
 
-        return new InMemoryUserDetailsManager(testUser, admin);
+    @Bean
+    JwtEncoder jwtEncoder() {
+        JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
+        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwks);
     }
 }

@@ -27,6 +27,7 @@ public class Account {
     private String firstName;
     private String lastName;
 
+    @Column(unique = true)
     private String phoneNumber;
 
     private String contactMethod;
@@ -37,6 +38,10 @@ public class Account {
     private ImageData profilePicture;
 
     public Account() {
+    }
+
+    public String getUsername() {
+        return email;
     }
 
     public String getContactMethod() {
