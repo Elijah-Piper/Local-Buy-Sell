@@ -1,5 +1,8 @@
 import React from 'react'
 import { Navbar, Container, Nav } from 'react-bootstrap'
+import LoginModal from './LoginModal'
+import LogoutBtn from './LogoutBtn'
+
 
 const SiteNav = () => {
   return (
@@ -11,6 +14,7 @@ const SiteNav = () => {
             <Nav className="me-auto">
             </Nav>
         </Navbar.Collapse>
+        { localStorage.getItem("jwt") !== '' || localStorage.getItem("jwt") === null  ? <LogoutBtn /> : <LoginModal /> }
         </Container>
     </Navbar>
   )
