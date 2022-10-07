@@ -9,7 +9,7 @@ const Logoutbtn = () => {
 
   return (
     <>
-        <Button variant="primary" onClick={handleLogout}>Logout</Button>
+        <Button href="/" variant="primary" onClick={handleLogout}>Logout</Button>
     </>
   )
 }

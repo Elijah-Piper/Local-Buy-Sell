@@ -2,13 +2,14 @@ import React from 'react'
 
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import AccountService from '../Service/AccountService';
 import ImageDataService from '../Service/ImageDataService';
 
 class ListingCard extends React.Component {
   
   constructor(props) {
     super(props);
+    console.log("listing: ")
+    console.log(props.listing)
     this.state = {
       listing: props.listing,
       img: [],

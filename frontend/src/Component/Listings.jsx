@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Alert, Button } from 'react-bootstrap';
 import ListingService from '../Service/ListingService';
 import ListingCard from './ListingCard';
 
@@ -21,13 +21,26 @@ class Listings extends React.Component {
     render() {
         return(
             // <div style={{"background-color": "lightgrey", "display": "flex", "flexDirection": "row", "height": "100%"}}>
-            <Container className="container-fluid mt-4" style={{"backgroundColor": "lightgrey", "display": "flex", "flexDirection": "row"}}>
+            <Container className="container-fluid mt-4" style={{"display": "flex", "flexDirection": "row"}}>
                 {
-                    this.state.listings.map(
-                        l => l.isSold ? 0 :
-                        <div key={ l.listingId }>
-                            <ListingCard listing={ l } />
-                        </div>
+                    localStorage.getItem("jwt") !== "" && localStorage.getItem("jwt") !== null ? (
+                        this.state.listings.length > 0 ? (
+                            this.state.listings.map(
+                                l => l.isSold ? 0 :
+                                <div key={ l.listingId }>
+                                    <ListingCard listing={ l } />
+                                </div>
+                            )
+                        ) : (
+                            <Alert variant="warning">
+                                There are currently no listings to display.
+                                <Button style={{"marginLeft": "1rem"}} href="/" variant="warning">Reload</Button>
+                            </Alert>
+                        )
+                    ) : (
+                        <Alert variant="info">
+                            Please sign in to see available listings
+                        </Alert>
                     )
                 }
             </Container>    
