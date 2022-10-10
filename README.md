@@ -17,6 +17,7 @@ Upon cloning the github repo:
 ## API endpoints
 1. "/account/**"
     - GET "/account/{accountId}" retrieves a single Account by its accountId
+    - GET "/account/getbyemail" retrieves the account with the email specified in the 'email' request parameter
     - GET "/account/all" retrieves a List<Account> containing all accounts saved to the database
     - POST "/account/create" saves a new account to the database based on the Account JSON object provided in the request body
     - PUT "/account/edit/{accountId}" updates an existing Account with the given accountId with the information in the request body
