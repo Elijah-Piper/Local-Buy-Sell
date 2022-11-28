@@ -1,0 +1,13 @@
+<div class="card">
+    <img id="cardImg" [src]="img" class="card-img-top" alt="listing image">
+    <div class="card-body">
+        <h5 class="card-title">{{ listing.title }}</h5>
+        <small><p><strong>Price: </strong>${{ listing.price }}</p></small>
+        <small><p><strong>List date: </strong>{{ listing.listDate }}</p></small>
+        <small><p><strong>Seller: </strong>{{ listing.account.firstName }} {{ listing.account.lastName.charAt(0) }}.</p></small>
+        <p class="card-text">
+            {{ listing.description.length > 63 ? listing.description.slice(0, 63) + "..." : listing.description }}
+        </p>
+        <a href="#" class="btn btn-primary">Details</a>
+    </div>
+</div>

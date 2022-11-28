@@ -1,0 +1,39 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Sign In
+</button>
+  
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ title }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="loginForm">
+
+                    <div class="mb-3 form-floating">
+                        <input class="form-control" id="floatingEmail" type="email" placeholder="Enter email" formControlName="email">
+                        <label for="floatingEmail">Enter Email Address</label>
+                        <span class="error" *ngIf="errors.email">{{ errors.email }}</span>
+                    </div>
+
+                    <div class="mb-3 form-floating">
+                        <input class="form-control" id="floatingPassword" [type]="showPass ? 'text' : 'password'" placeholder="Enter password" formControlName="password">
+                        <label for="floatingPassword">Enter Password</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="showPassCheckbox" formControlName="showPass">
+                            <label class="form-check-label" for="showPassCheckbox">Show Password</label>
+                        </div>
+                        <span class="error" *ngIf="errors.password">{{ errors.password }}</span>
+                    </div>
+
+                    <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

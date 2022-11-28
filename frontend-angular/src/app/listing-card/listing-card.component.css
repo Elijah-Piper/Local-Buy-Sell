@@ -1,0 +1,15 @@
+.card {
+    margin: .5rem;
+    width: 18rem;
+    height: 35rem;
+}
+
+#cardImg {
+    height: 17.852rem;
+    width: 17.852rem;
+    object-fit: cover;
+}
+
+.card-text {
+    height: 3rem;
+}

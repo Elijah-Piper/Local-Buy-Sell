@@ -1,0 +1,12 @@
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+    <div>
+        <a class="navbar-brand" href="#">Buy/Sell</a>
+        <button *ngIf="jwt" type="button" class="btn btn-success">Create Listing</button>
+    </div>
+    <div>
+        <app-sign-in *ngIf="!jwt"></app-sign-in>
+        <div *ngIf="jwt" class="d-inline">
+            <button (click)="signOut()" type="button" class="btn btn-primary">Sign Out</button>
+        </div>
+    </div>
+</nav>
