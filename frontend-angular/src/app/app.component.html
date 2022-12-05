@@ -1,3 +1,6 @@
 <app-nav></app-nav>
-<app-listings></app-listings>
-<router-outlet></router-outlet>
+<div class="m-3" id="view">
+    {{ getJwt() === 'exp' ? sessionExpired() : '' }}
+    <router-outlet></router-outlet>
+</div>
+

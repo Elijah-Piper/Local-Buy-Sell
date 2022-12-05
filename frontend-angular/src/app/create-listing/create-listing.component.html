@@ -1,1 +1,50 @@
-<p>create-listing works!</p>
+    <div *ngIf="jwt === 'exp'" class="alert alert-danger" role="alert">
+        Your session has expired. Please sign out and sign back in.
+    </div>
+
+    <div *ngIf="jwt !== 'exp' && jwt" id="form-container">
+
+        <h1>Please describe your new listing:</h1>
+
+        <form [formGroup]="listingForm" class="needs-validation">
+
+            <div class="mb-3 form-floating">
+                <input class="form-control" id="floating-title" type="text" placeholder="Enter title" formControlName="title" required>
+                <label for="floating-title">Title</label>
+                <div *ngIf="errors.title" class="alert alert-danger" role="alert">{{ errors.title }}</div>
+            </div>
+
+            
+            <div class="mb-3 form-floating">
+                <input class="form-control" id="floating-price" type="number" placeholder="Asking price" formControlName="price">
+                <label for="floating-price">Asking price $</label>
+                <div *ngIf="errors.price" class="alert alert-danger" role="alert">{{ errors.price }}</div>
+            </div>
+
+            <div class="mb-3 form-floating">
+                <textarea class="form-control" id="floating-description" formControlName="description"></textarea>
+                <label for="floating-description">Description</label>
+                <div *ngIf="errors.description" class="alert alert-danger" role="alert">{{ errors.description }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="formFileMultiple" class="form-label">Photos Upload</label>
+                <input class="form-control" type="file" id="formFileMultiple" fromControlName="images" multiple (change)="handleFileInput($event.target)" accept="image/png, image/jpeg, image/webp" />
+                <div *ngIf="errors.images" class="alert alert-danger" role="alert">{{ errors.images }}</div>
+            </div>
+            <div class="mb-3 d-flex flex-wrap" *ngIf="images">
+                <div class="card" style="width: 18rem; margin-right: 1rem; margin-bottom: 1rem;" *ngFor="let i of createRange(images.length)">
+                    <img class="card-img-top" [src]="images[i].url" alt="Uploaded image">
+                    <div class="card-body">
+                        <p class="card-text" id="previewName">{{ images[i].file.name }} </p>
+                        <p class="card-text" id="previewSize">({{ formatBytes(images[i].file.size) }})</p>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="handleRemoveImg(i)">Remove</button>
+                </div>
+            </div>
+
+            <button (click)="onSubmit()" type="submit" class="btn btn-primary">Create</button>
+            <div *ngIf="errors.createListing" class="alert alert-danger" role="alert">{{ errors.createListing }}</div>
+
+        </form>
+    </div>

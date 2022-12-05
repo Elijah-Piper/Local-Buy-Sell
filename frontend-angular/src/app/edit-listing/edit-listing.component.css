@@ -1,0 +1,31 @@
+#form-container {
+    padding: 2rem;
+}
+
+.alert {
+    margin-top: .5rem;
+}
+
+.card-img-top {
+    height: 17.852rem;
+    width: 17.852rem;
+    object-fit: cover;
+}
+
+#previewName {
+    font-size: smaller;
+    font-weight: 500;
+}
+
+#previewSize {
+    font-size: smaller;
+    font-weight: 350;
+}
+
+#previewRemoveBtn {
+    font-size: smaller;
+}
+
+#view {
+    padding: 1rem;
+}

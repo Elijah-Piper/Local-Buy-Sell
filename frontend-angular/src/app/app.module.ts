@@ -28,7 +28,7 @@ import { ListingCardComponent } from './listing-card/listing-card.component';
     CreateListingComponent,
     EditListingComponent,
     AccountIndicComponent,
-    ListingCardComponent
+    ListingCardComponent,
   ],
   imports: [
     BrowserModule,

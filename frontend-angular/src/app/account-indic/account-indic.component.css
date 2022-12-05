@@ -1,0 +1,17 @@
+.card {
+    flex-direction: row;
+    height: 3.9rem;
+    width: 15rem;
+    margin-right: 0.5rem;
+    padding-top: 0rem;
+    cursor: pointer;
+    position: absolute;
+    transform: translate(-16rem, -0.7rem);
+}
+
+#profPic {
+    transform: translate(-0.063rem, -0.063rem);
+    height: 3.9rem;
+    width: 3.9rem;
+    object-fit: cover;
+}

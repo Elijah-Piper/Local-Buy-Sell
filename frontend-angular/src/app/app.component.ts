@@ -7,4 +7,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'frontend-angular';
+
+  sessionExpired() {
+    if (confirm("Your session has expired, please sign back in.")) {
+      localStorage.setItem('jwt', '');
+      location.reload();
+    }
+  }
+  
+  getJwt() {
+    return localStorage.getItem('jwt');
+  }
 }

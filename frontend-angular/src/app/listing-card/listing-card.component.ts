@@ -12,15 +12,21 @@ export class ListingCardComponent implements OnInit {
 
   img = '';
 
-  @Input() listing: any;
+  @Input() props: { listing: any; name: string };
   constructor(private http: HttpClient) {
   }
 
   ngOnInit(): void {
-    if (this.img === '' && this.listing && this.listing.images.length !== 0) {
+    if (this.img === '' && this.props.listing && this.props.listing.images.length !== 0) {
       this.getImage();
-    } else if (this.listing) {
+    } else if (this.props.listing) {
       this.img = "https://media.istockphoto.com/id/1396039964/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder.jpg?b=1&s=170667a&w=0&k=20&c=hzLqz1qI7UtmGgCRRdGXghrNPE8zg8a0D6SgRQ8AiIA="
+    }
+  }
+
+  handleDeleteBtnClick() {
+    if (confirm("Are you sure you want to delete this listing?")) {
+      this.deleteListing()
     }
   }
 
@@ -28,7 +34,7 @@ export class ListingCardComponent implements OnInit {
     let httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('jwt')}`
     })
-    this.http.get(this.ROOT_URL + `/image/${this.listing.images[0].imageId}`, {
+    this.http.get(this.ROOT_URL + `/image/${this.props.listing.images[0].imageId}`, {
       responseType: 'arraybuffer',
       headers: httpHeaders,
       observe: 'response'
@@ -42,6 +48,22 @@ export class ListingCardComponent implements OnInit {
         );
         this.img = `data:${response.headers.get('content-type').toLowerCase()};base64,${image}`;
       }
+    })
+  }
+
+  deleteListing() {
+    let httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('jwt')}`
+    })
+
+    this.http.delete(this.ROOT_URL + `/listing/delete/${this.props.listing.listingId}`, {
+      headers: httpHeaders
+    }).subscribe((response) => {
+      console.log("Successfully deleted")
+      location.reload();
+    }, (error) => {
+      console.log(`DELETION ERROR:`)
+      console.log(error);
     })
   }
 

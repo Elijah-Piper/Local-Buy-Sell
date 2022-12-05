@@ -1,12 +1,6 @@
-<div class="card mb-3" style="max-width: 540px; height: 3rem">
-    <div class="row g-0">
-      <div class="col-md-4">
-        <img src="..." class="img-fluid rounded-start" alt="...">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-        </div>
-      </div>
-    </div>
+<div class="card" routerLink="/account-details">
+  <img class="rounded" id="profPic" [src]="profilePic" alt="Profile pic">
+  <div class="card-body">
+    <h5 class="card-title">{{ account.firstName }} {{ account.lastName }}</h5>
   </div>
+</div>

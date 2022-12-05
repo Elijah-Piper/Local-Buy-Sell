@@ -13,3 +13,11 @@
 .card-text {
     height: 3rem;
 }
+
+#editBtn {
+    margin-left: 0.2rem;
+}
+
+#deleteBtn {
+    margin-left: 0.2rem;
+}

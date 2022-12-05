@@ -36,6 +36,11 @@ export class ListingsComponent implements OnInit {
       } else {
         this.listings = result;
       }
+    }, (error) => {
+      if (error.status === 401) {
+        localStorage.setItem('jwt', 'exp');
+
+      }
     })
   }
 

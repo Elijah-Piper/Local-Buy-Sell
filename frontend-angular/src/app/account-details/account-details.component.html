@@ -1,1 +1,27 @@
-<p>account-details works!</p>
+<div class="d-flex justify-content-left">
+    <img [src]="profilePic" id="profPic" class="img-thumbnail" alt="Profile pic">
+    <div class="d-flex flex-column" [style]="{marginLeft: '1rem'}">
+        <div class="jumbotron">
+            <h1 class="display-4">{{ account.firstName }} {{ account.lastName }}</h1>
+            <p class="lead">Email: {{ account.email }}</p>
+            <p class="lead">Phone: {{ account.phoneNumber }}</p>
+            <p class="lead">Preferred contact method: {{ account.contactMethod }}</p>
+            <p class="lead">
+              <a class="btn btn-warning btn-lg" id="editAccountBtn" href="#" role="button">Edit preferences/info</a>
+            </p>
+          </div>
+    </div>
+</div>
+
+<hr>
+<div class="d-flex justify-content-center">
+    <h4 class="display-5">Your Listings:</h4>
+</div>
+
+<div *ngIf="!account.listings" class="alert alert-warning" role="alert">
+    You don't currently have any listings
+</div>
+
+<div class="d-flex flex-wrap">
+    <app-listing-card *ngFor="let listing of account.listings" [props]="{ listing: listing, name: account.firstName + ' ' + account.lastName.charAt(0) + '.' }"></app-listing-card>
+</div>

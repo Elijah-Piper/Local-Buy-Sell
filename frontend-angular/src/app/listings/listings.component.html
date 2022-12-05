@@ -1,15 +1,13 @@
-<div id="view">
+<div *ngIf="!jwt" class="alert alert-info" role="alert">
+    Please sign in to see available listings.
+</div>
+<div *ngIf="jwt && !listings" class="alert alert-warning" role="alert">
+    There are currently no available listings.
+</div>
+<div *ngIf="jwt === 'exp'" class="alert alert-danger" role="alert">
+    Your session has expired. Please sign out and sign back in.
+</div>
 
-    <div *ngIf="!jwt" class="alert alert-info" role="alert">
-        Please sign in to see available listings.
-    </div>
-    <div *ngIf="jwt && !listings" class="alert alert-warning" role="alert">
-        There are currently no available listings.
-    </div>
-
-    <div class="d-flex flex-wrap">
-        <app-listing-card *ngFor="let obj of listings" [listing]="obj"></app-listing-card>
-    </div>
-    
-
+<div class="d-flex flex-wrap">
+    <app-listing-card *ngFor="let obj of listings" [props]="{ listing: obj, name: '' }"></app-listing-card>
 </div>

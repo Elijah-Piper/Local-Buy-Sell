@@ -1,10 +1,11 @@
 <nav class="navbar navbar-dark bg-dark justify-content-between">
     <div>
-        <a class="navbar-brand" href="#">Buy/Sell</a>
-        <button *ngIf="jwt" type="button" class="btn btn-success">Create Listing</button>
+        <a class="navbar-brand" routerLink="/">Buy/Sell</a>
+        <button *ngIf="jwt" type="button" class="btn btn-success" routerLink="/create-listing">Create Listing</button>
     </div>
-    <div>
+    <div class="d-flex flex-row">
         <app-sign-in *ngIf="!jwt"></app-sign-in>
+        <app-account-indic *ngIf="jwt && jwt !== 'exp'"></app-account-indic>
         <div *ngIf="jwt" class="d-inline">
             <button (click)="signOut()" type="button" class="btn btn-primary">Sign Out</button>
         </div>

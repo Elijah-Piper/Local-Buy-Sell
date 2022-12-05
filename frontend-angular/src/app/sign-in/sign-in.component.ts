@@ -21,7 +21,8 @@ export class SignInComponent {
 
   errors = {
     email: '',
-    password: ''
+    password: '',
+    signIn: ''
   }
 
   loginForm = new FormGroup({
@@ -58,7 +59,7 @@ export class SignInComponent {
 
   validateEmail(): boolean {
     if (this.email === null) {
-      this.errors.email = "ERROR: The form control was return as null";
+      this.errors.email = "ERROR: The form control was returned as null";
       this.setFormControlAsInvalid('email');
       return false;
     } else if (this.email.value === "") {
@@ -77,7 +78,7 @@ export class SignInComponent {
 
   validatePassword(): boolean {
     if (this.password === null) {
-      this.errors.password = "ERROR: The form control was return as null";
+      this.errors.password = "ERROR: The form control was returned as null";
       this.setFormControlAsInvalid('password');
       return false;
     } else if (this.password.value === "") {
@@ -103,7 +104,6 @@ export class SignInComponent {
 
 
   generateToken() {
-    console.log(`Email: ${this.email?.value}, Password: ${this.password?.value}`)
 
     let httpHeaders = new HttpHeaders().set('Authorization', `Basic ${btoa(this.email?.value + ':' + this.password?.value)}`)
 
@@ -114,8 +114,13 @@ export class SignInComponent {
         if (result.IsSuccess === false && result.ErrorMsg != null) {
           console.log(`Error Occurred: ${result.ErrorMsg}`);
         } else {
+          this.errors.signIn = '';
           localStorage.setItem('jwt', result);
           location.reload();
+        }
+      }, (error) => {
+        if (error.status === 401) {
+          this.errors.signIn = "Email invalid or password incorrect";
         }
       })
   }
