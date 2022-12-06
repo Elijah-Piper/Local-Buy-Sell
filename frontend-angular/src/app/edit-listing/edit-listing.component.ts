@@ -12,6 +12,12 @@ interface listingDetails {
   price: FormControl<number>,
   description: FormControl<string>
 }
+interface ImgSrcData {
+  id: number,
+  src: string,
+  name: string,
+  size: string
+}
 
 @Component({
   selector: 'app-edit-listing',
@@ -28,13 +34,15 @@ export class EditListingComponent implements OnInit {
 
   jwt = localStorage.getItem('jwt');
 
-  images: FileHandle[] = [];
+  newImages: FileHandle[] = [];
+  oldImages: ImgSrcData[] = [];
 
   errors = {
     title: '',
     price: '',
     description: '',
-    images: '',
+    oldImages: '',
+    newImages: '',
     editListing: ''
   }
 
@@ -63,6 +71,40 @@ export class EditListingComponent implements OnInit {
     }
   }
 
+  getExistingImages() {
+    let httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('jwt')}`
+    })
+    console.log("all images");
+    console.log(this.listing.images);
+    for (let i = 0; i < this.listing.images.length; i++) {
+      let imgId: number = this.listing.images[i].imageId;
+      let imgName: string = this.listing.images[i].name;
+
+      this.http.get(this.ROOT_URL + `/image/${imgId}`, {
+        responseType: 'arraybuffer',
+        headers: httpHeaders,
+        observe: 'response'
+      }).subscribe((r: any) => {
+        let image = btoa(
+          new Uint8Array(r.body)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        );
+        let responseImageSrc = `data:${r.headers.get('content-type').toLowerCase()};base64,${image}`;
+        this.oldImages.push({
+          id: imgId, 
+          src: responseImageSrc,
+          name: imgName,
+          size: this.formatBytes(this.getBytesFromString(responseImageSrc))
+        });
+        console.log(this.oldImages);
+      }, (e) => {
+        console.log("\nERROR getting profile picture from DB");
+        console.log(e);
+      })
+    }
+  }
+
   handleFileInput(target: any) {
     let files = (target as HTMLInputElement).files;
     if (files) for (let i = 0; i < files.length; i++) {
@@ -73,14 +115,31 @@ export class EditListingComponent implements OnInit {
           window.URL.createObjectURL(f)
         )
       }
-      this.images.push(fileHandle);
+      this.newImages.push(fileHandle);
     }
   }
 
-  handleRemoveImg(i: number) {
-    if (this.images.length >= i && i > -1) {
-      this.images.splice(i, 1);
+  handleRemoveNewImg(i: number) {
+    if (this.newImages.length >= i && i > -1) {
+      this.newImages.splice(i, 1);
     }
+  }
+
+  handleRemoveOldImg(imageId: number) {
+    let httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('jwt')}`
+    })
+
+    this.http.delete(this.ROOT_URL + `/image/delete/${imageId}`, {
+      headers: httpHeaders
+    }).subscribe((response) => {
+      console.log("successful img deletion");
+      this.oldImages.splice(imageId, 1);
+      location.reload();
+    }, (error) => {
+      console.log("ERROR OCCURRED DELETING IMAGE FROM LISTING");
+      console.log(error);
+    })
   }
 
   createRange(n: number): number[] {
@@ -103,6 +162,10 @@ export class EditListingComponent implements OnInit {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
   }
 
+  getBytesFromString(str: string): number {
+    return new Blob([str]).size;
+  }
+
   populateListingInfo() {
     let httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('jwt')}`
@@ -117,7 +180,7 @@ export class EditListingComponent implements OnInit {
         price: new FormControl(this.listing.price, Validators.required),
         description: new FormControl(this.listing.description, Validators.required)
       })
-      console.log(this.listing.images[0]);
+      this.getExistingImages();
     }, (error) => {
       console.log("ERROR GETTING EDITING LISTING");
       console.log(error);
@@ -193,21 +256,21 @@ export class EditListingComponent implements OnInit {
   }
 
   validateImages(): boolean {
-    if (this.images === null) {
-      this.errors.images = "At least 1 image is required";
+    if (this.newImages === null) {
+      this.errors.newImages = "At least 1 image is required";
       return false;
-    } else if (this.images.length > 12) {
-      this.errors.images = "12 images maximum, please remove some"
+    } else if (this.newImages.length > 12) {
+      this.errors.newImages = "12 images maximum, please remove some"
       return false;
     } else {
-      for (let i = 0; i < this.images.length; i++) {
-        let im = this.images[i].file;
+      for (let i = 0; i < this.newImages.length; i++) {
+        let im = this.newImages[i].file;
         if (im?.type !== "image/jpeg" && im?.type !== "image/png" && im?.type !== "image/webp") {
-          this.errors.images = "Only PNG, JPG/JPEG, or WEBP image types allowed"
+          this.errors.newImages = "Only PNG, JPG/JPEG, or WEBP image types allowed"
           return false;
         }
       }
-      this.errors.images = "";
+      this.errors.newImages = "";
       return true;
     }
   }
@@ -234,7 +297,7 @@ export class EditListingComponent implements OnInit {
         if (this.errors.title) invalid.push('title');
         if (this.errors.price) invalid.push('price');
         if (this.errors.description) invalid.push('description');
-        if (this.errors.images) invalid.push('images');
+        if (this.errors.newImages) invalid.push('images');
 
         switch (invalid.length) {
           case 1:

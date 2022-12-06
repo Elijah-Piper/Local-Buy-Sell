@@ -6,7 +6,7 @@
 
     <h1>Edit your listing's information:</h1>
 
-    <form [formGroup]="listingForm" class="needs-validation">
+    <form *ngIf="listingForm" [formGroup]="listingForm" class="needs-validation">
 
         <div class="mb-3 form-floating">
             <input class="form-control" id="floating-title" type="text" placeholder="Enter title" formControlName="title" required>
@@ -30,18 +30,28 @@
         <div class="mb-3">
             <label for="formFileMultiple" class="form-label">Photos Upload</label>
             <input class="form-control" type="file" id="formFileMultiple" fromControlName="images" multiple (change)="handleFileInput($event.target)" accept="image/png, image/jpeg, image/webp" />
-            <div *ngIf="errors.images" class="alert alert-danger" role="alert">{{ errors.images }}</div>
+            <div *ngIf="errors.newImages" class="alert alert-danger" role="alert">{{ errors.newImages }}</div>
         </div>
-        <div class="mb-3 d-flex flex-wrap" *ngIf="images">
-            <div class="card" style="width: 18rem; margin-right: 1rem; margin-bottom: 1rem;" *ngFor="let i of createRange(images.length)">
-                <img class="card-img-top" [src]="images[i].url" alt="Uploaded image">
+        <div class="mb-3 d-flex flex-wrap" *ngIf="newImages">
+            <div class="card" style="width: 18rem; margin-right: 1rem; margin-bottom: 1rem;" *ngFor="let i of createRange(newImages.length)">
+                <img class="card-img-top" [src]="newImages[i].url" alt="Uploaded image">
                 <div class="card-body">
-                    <p class="card-text" id="previewName">{{ images[i].file.name }} </p>
-                    <p class="card-text" id="previewSize">({{ formatBytes(images[i].file.size) }})</p>
+                    <p class="card-text" id="previewName">{{ newImages[i].file.name }} </p>
+                    <p class="card-text" id="previewSize">({{ formatBytes(newImages[i].file.size) }})</p>
                 </div>
-                <button type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="handleRemoveImg(i)">Remove</button>
+                <button type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="handleRemoveNewImg(i)">Remove</button>
             </div>
-            <!-- <img [src]="" -->
+        </div>
+        <div class="mb-3 d-flex flex-wrap">
+            <div class="card" style="width: 18rem; margin-right: 1rem; margin-bottom: 1rem;" *ngFor="let img of oldImages">
+                <img class="card-img-top" [src]="img.src" alt="Uploaded image">
+                <p></p>
+                <div class="card-body">
+                    <p class="card-text" id="previewName">{{ img.name }} </p>
+                    <p class="card-text" id="previewSize">({{ img.size }})</p>
+                </div>
+                <button type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="handleRemoveOldImg(img.id)">Remove</button>
+            </div>
         </div>
 
         <button (click)="onSubmit()" type="submit" class="btn btn-primary">Create</button>
