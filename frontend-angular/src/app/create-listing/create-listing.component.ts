@@ -169,7 +169,7 @@ export class CreateListingComponent implements OnInit {
       let newListing = response.listings[response.listings.length - 1];
       if (this.images) {
         for (let i = 0; i < this.images.length; i++) {
-          this.addImgToListing(this.images[0].file, newListing.listingId);
+          this.addImgToListing(this.images[i].file, newListing.listingId);
         }
       }
     }, (error) => {
