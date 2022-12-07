@@ -42,19 +42,26 @@
                 <button type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="handleRemoveNewImg(i)">Remove</button>
             </div>
         </div>
+        <hr>
+        <div *ngIf="oldImages" class="d-flex justify-content-center">
+            <h6 class="display-6">Current Listing Photos:</h6>
+        </div>
         <div class="mb-3 d-flex flex-wrap">
             <div class="card" style="width: 18rem; margin-right: 1rem; margin-bottom: 1rem;" *ngFor="let img of oldImages">
-                <img class="card-img-top" [src]="img.src" alt="Uploaded image">
+                <img class="card-img-top" *ngIf="! img.removed" [src]="img.src" alt="Uploaded image">
+                <div *ngIf="img.removed" id="imgRemovedAlert" class="alert alert-danger text-center" role="alert"><h4>Image Removed</h4></div>
                 <p></p>
                 <div class="card-body">
                     <p class="card-text" id="previewName">{{ img.name }} </p>
                     <p class="card-text" id="previewSize">({{ img.size }})</p>
                 </div>
-                <button type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="handleRemoveOldImg(img.id)">Remove</button>
+                <button *ngIf="! img.removed" type="button" class="btn btn-outline-danger" id="previewRemoveBtn" (click)="img.removed = true">Remove</button>
+                <button *ngIf="img.removed" type="button" class="btn btn-outline-secondary" id="previewUndoRemoveBtn" (click)="img.removed = false">Undo</button>
             </div>
         </div>
 
-        <button (click)="onSubmit()" type="submit" class="btn btn-primary">Create</button>
+        <button (click)="onSubmit()" id="saveBtn" type="submit" class="btn btn-primary">Save</button>
+        <button (click)="goToAccountDetails()" class="btn btn-secondary">Cancel</button>
         <div *ngIf="errors.editListing" class="alert alert-danger" role="alert">{{ errors.editListing }}</div>
 
     </form>

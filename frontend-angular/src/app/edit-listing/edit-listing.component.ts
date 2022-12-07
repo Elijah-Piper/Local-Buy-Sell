@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ListingCardComponent } from '../listing-card/listing-card.component';
 import { FileHandle } from '../models/file-handle.model';
 import { Listing } from '../models/listing.model';
@@ -16,7 +16,8 @@ interface ImgSrcData {
   id: number,
   src: string,
   name: string,
-  size: string
+  size: string,
+  removed: boolean
 }
 
 @Component({
@@ -48,7 +49,7 @@ export class EditListingComponent implements OnInit {
 
   listingForm: FormGroup;
 
-  constructor(private http: HttpClient, private _Activatedroute: ActivatedRoute, private sanitizer: DomSanitizer) { }
+  constructor(private http: HttpClient, private _Activatedroute: ActivatedRoute, private sanitizer: DomSanitizer, private _router: Router) { }
 
   get title() {
     return this.listingForm.get('title');
@@ -95,7 +96,8 @@ export class EditListingComponent implements OnInit {
           id: imgId, 
           src: responseImageSrc,
           name: imgName,
-          size: this.formatBytes(this.getBytesFromString(responseImageSrc))
+          size: this.formatBytes(this.getBytesFromString(responseImageSrc)),
+          removed: false
         });
         console.log(this.oldImages);
       }, (e) => {
@@ -103,6 +105,10 @@ export class EditListingComponent implements OnInit {
         console.log(e);
       })
     }
+  }
+
+  goToAccountDetails() {
+    this._router.navigateByUrl("/account-details");
   }
 
   handleFileInput(target: any) {
@@ -125,7 +131,7 @@ export class EditListingComponent implements OnInit {
     }
   }
 
-  handleRemoveOldImg(imageId: number) {
+  removeOldImg(imageId: number) {
     let httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('jwt')}`
     })
@@ -134,8 +140,6 @@ export class EditListingComponent implements OnInit {
       headers: httpHeaders
     }).subscribe((response) => {
       console.log("successful img deletion");
-      this.oldImages.splice(imageId, 1);
-      location.reload();
     }, (error) => {
       console.log("ERROR OCCURRED DELETING IMAGE FROM LISTING");
       console.log(error);
@@ -187,17 +191,52 @@ export class EditListingComponent implements OnInit {
     })
   }
 
+  addImgToListing(img: File, listingId: number) {
+    let httpHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.jwt}`);
+    let httpBody = new FormData();
+    httpBody.append('image', img, img.name)
+    httpBody.append('reportProgress', "true");
+
+    this.http.post(this.ROOT_URL + `/image/addlistingimage/${listingId}`, httpBody, {
+      headers: httpHeaders
+    }).subscribe((response: any) => {
+      console.log('\nIMG UPLOAD SUCCESS\n');
+      console.log(response);
+    }, (error) => {
+      console.log('\nIMG UPLOAD HTTP ERROR...\n');
+      console.log(error);
+    })
+  }
+
   editListing() {
     let httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('jwt')}`
     })
 
-    this.http.put(this.ROOT_URL + `/listing/edit/${this.listingId}`, this.listing, {
+    let updatedListing = {
+      title: this.title?.value,
+      price: this.price?.value,
+      description: this.description?.value,
+    }
+
+    for (let i = 0; i < this.oldImages.length; i++) {
+      if (this.oldImages[i].removed) {
+        this.removeOldImg(this.oldImages[i].id);
+      }
+    }
+
+    if (this.newImages) {
+      for (let i = 0; i < this.newImages.length; i++) {
+        this.addImgToListing(this.newImages[i].file, this.listing.listingId);
+      }
+    }
+
+    this.http.put(this.ROOT_URL + `/listing/edit/${this.listingId}`, updatedListing, {
       headers: httpHeaders
     }).subscribe((response: any) => {
-      this.listing = response;
       console.log("success");
-      console.log(this.listing);
+      console.log(response);
+      this._router.navigateByUrl("/account-details");
     }, (error) => {
       console.log("ERROR GETTING EDITING LISTING");
       console.log(error);
@@ -230,6 +269,9 @@ export class EditListingComponent implements OnInit {
     } else if (this.price.value < 0) {
       this.errors.price = "Price cannot be negative";
       return false;
+    } else if (this.price.value >= 1000000000) {
+      this.errors.price = "Price cannot be more than 1 billion";
+      return false;
     } else {
       this.errors.price = "";
       return true;
@@ -256,10 +298,17 @@ export class EditListingComponent implements OnInit {
   }
 
   validateImages(): boolean {
-    if (this.newImages === null) {
+    let numOfImgs = this.newImages.length;
+    for (let i = 0; i < this.oldImages.length; i++) {
+      if (! this.oldImages[i].removed) {
+        numOfImgs++;
+      }
+    }
+
+    if (numOfImgs === 0) {
       this.errors.newImages = "At least 1 image is required";
       return false;
-    } else if (this.newImages.length > 12) {
+    } else if (numOfImgs > 12) {
       this.errors.newImages = "12 images maximum, please remove some"
       return false;
     } else {
@@ -288,7 +337,7 @@ export class EditListingComponent implements OnInit {
     if (this.validate()) {
       this.errors.editListing = '';
       console.log("VALIDATED");
-      // this.editListing();
+      this.editListing();
     } else {
       if (!this.errors.editListing) {
         let invalid: string[] = []
