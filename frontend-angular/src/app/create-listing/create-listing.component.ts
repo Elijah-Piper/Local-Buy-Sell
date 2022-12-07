@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileHandle } from '../models/file-handle.model';
+import { Router } from '@angular/router';
 
 interface listingDetails {
   title: FormControl<string>,
@@ -41,7 +42,7 @@ export class CreateListingComponent implements OnInit {
     description: new FormControl('', Validators.required),
   })
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private _router: Router) { }
 
   get title() {
     return this.listingForm.get('title');
@@ -172,10 +173,15 @@ export class CreateListingComponent implements OnInit {
           this.addImgToListing(this.images[i].file, newListing.listingId);
         }
       }
+      this._router.navigateByUrl("/account-details");
     }, (error) => {
       console.log('\nHTTP ERROR...\n');
       console.log(error);
     })
+  }
+
+  goToAccountDetails() {
+    this._router.navigateByUrl('/account-details');
   }
 
   validateTitle(): boolean {
@@ -203,6 +209,9 @@ export class CreateListingComponent implements OnInit {
       return false;
     } else if (this.price.value < 0) {
       this.errors.price = "Price cannot be negative";
+      return false;
+    } else if (this.price.value >= 1000000000) {
+      this.errors.price = "Price cannot be more than 1 billion";
       return false;
     } else {
       this.errors.price = "";

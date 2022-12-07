@@ -43,7 +43,8 @@
                 </div>
             </div>
 
-            <button (click)="onSubmit()" type="submit" class="btn btn-primary">Create</button>
+            <button (click)="onSubmit()" id="createBtn" type="submit" class="btn btn-primary">Create</button>
+            <button (click)="goToAccountDetails()" class="btn btn-secondary">Cancel</button>
             <div *ngIf="errors.createListing" class="alert alert-danger" role="alert">{{ errors.createListing }}</div>
 
         </form>
