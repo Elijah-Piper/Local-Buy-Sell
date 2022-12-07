@@ -1,0 +1,10 @@
+.listingImg {
+    width: 50rem;
+    height: 60rem;
+    object-fit:scale-down;
+}
+
+#photosCarousel {
+    width: 80rem;
+    margin: auto;
+}

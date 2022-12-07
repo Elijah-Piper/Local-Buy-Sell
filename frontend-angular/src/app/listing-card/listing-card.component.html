@@ -18,7 +18,7 @@
             {{ props.listing.description.length > 63 ? props.listing.description.slice(0, 63) + "..." : props.listing.description }}
         </p>
         <div class="d-flex flex-row">
-            <a href="#" class="btn btn-primary">Details</a>
+            <a href="#" class="btn btn-primary" [routerLink]="'/listing-details/' + props.listing.listingId">Details</a>
             <a *ngIf="props.name" id="editBtn" [routerLink]="'/edit-listing/' + props.listing.listingId" class="btn btn-warning">Edit</a>
             <a *ngIf="props.name" id="deleteBtn" (click)="deleteListing()" class="btn btn-danger">Delete</a>
         </div>

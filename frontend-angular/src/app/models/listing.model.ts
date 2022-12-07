@@ -7,4 +7,5 @@ export interface Listing {
     isSold: boolean;
     listDate: any;
     images: any[];
+    account: any;
 }

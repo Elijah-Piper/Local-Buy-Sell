@@ -1,1 +1,33 @@
-<p>listing-details works!</p>
+<div *ngIf="listing" class="jumbotron jumbotron-fluid text-center">
+
+    <div class="carousel carousel-dark slide" id="photosCarousel" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button *ngFor="let image of images; let i = index" [attr.data-index]="i" type="button" data-bs-target="#photosCarousel" [attr.data-bs-slide-to]="i" [class]="i === 0 ? 'active' : ''" [attr.aria-label]="'Photo ' + (i + 1)" [attr.aria-current]="i === 0 ? 'true' : 'false'"></button>
+        </div>
+        <div class="carousel-inner">
+            <div *ngFor="let image of images; let i = index" [class]="i === 0 ? 'carousel-item active' : 'carousel-item'">
+                <img [src]="image.src" class="listingImg d-block w-100" [alt]="'Photo #' + i">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#photosCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#photosCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <h1 class="display-4">{{ listing.title }}</h1>
+
+    <hr class="my-4">
+
+    <p class="lead"><strong>Asking price: </strong>${{ listing.price }}</p>
+    <p class="lead"><strong>List date: </strong>{{ listing.listDate }}</p>
+    <p class="lead"><strong>Seller: </strong>{{ listing.account.firstName }} {{ listing.account.lastName.charAt(0) }}.</p>
+
+    <hr class="my-4">
+
+    <p class="lead">{{ listing.description }}</p>
+</div>
