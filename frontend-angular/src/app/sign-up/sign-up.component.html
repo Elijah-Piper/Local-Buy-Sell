@@ -1,1 +1,98 @@
-<p>sign-up works!</p>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-up-modal">
+    Sign Up
+</button>
+
+<div class="modal fade" id="sign-up-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="sign-up-modal-label">{{ title }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="signUpForm">
+
+                    <div class="mb-3 form-floating">
+                        <input class="form-control" id="floatingEmail" type="email" placeholder="Enter email" formControlName="email">
+                        <label for="floatingEmail">Enter Email Address</label>
+                        <div *ngIf="errors.email" class="alert alert-danger" role="alert">{{ errors.email }}</div>
+                    </div>
+
+                    <div class="mb-3 form-floating">
+                        <input class="form-control" id="floatingPhoneNumber" type="text" placeholder="Enter Phone Number" formControlName="phoneNumber">
+                        <label for="floatingPhoneNumber">Enter Phone Number <small style="font-weight: 200">(optional)</small></label>
+                        <div *ngIf="errors.phoneNumber" class="alert alert-danger" role="alert">{{ errors.phoneNumber }}</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <select class="form-select" aria-label="Contact method select">
+                            <option selected>Preferred contact method</option>
+                            <option value="email">Email</option>
+                            <option *ngIf="phoneNumber?.value != null" value="text">Text</option>
+                            <option *ngIf="phoneNumber?.value != null" value="call">Call</option>
+                        </select>
+                        <div *ngIf="errors.contactMethod" class="alert alert-danger" role="alert">{{ errors.contactMethod }}</div>
+                    </div>
+
+                    <div class="d-flex flex-row justify-content-between">
+                        <div class="mb-3 form-floating">
+                            <input class="form-control" id="floatingFirstName" type="text" placeholder="Enter first name" formControlName="firstName" style="width: 14.1rem;">
+                            <label for="floatingFirstName">Enter First Name</label>
+                            <div *ngIf="errors.firstName" class="alert alert-danger" role="alert">{{ errors.firstName }}</div>
+                        </div>
+
+                        <div class="mb-3 form-floating">
+                            <input class="form-control" id="floatingLastName" type="text" placeholder="Enter last name" formControlName="lastName" style="width: 14.1rem;">
+                            <label for="floatingLastName">Enter Last Name</label>
+                            <div *ngIf="errors.lastName" class="alert alert-danger" role="alert">{{ errors.lastName }}</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row justify-content-between">
+                        <div class="mb-3 form-floating">
+                            <input class="form-control" id="floatingPassword" [type]="showPass ? 'text' : 'password'" placeholder="Enter password" formControlName="password" style="width: 14.1rem;">
+                            <label for="floatingPassword">Enter Password</label>
+                            <div *ngIf="errors.password" class="alert alert-danger" role="alert">{{ errors.password }}</div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" formControlName="showPass">
+                                <label class="form-check-label" for="showPassCheckbox">Show Password</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-floating">
+                            <input class="form-control" id="floatingConfirmPassword" [type]="showPass ? 'text' : 'password'" placeholder="Confirm password" formControlName="confirmPassword" style="width: 14.1rem;">
+                            <label for="floatingConfirmPassword">Confirm Password</label>
+                            <div *ngIf="errors.confirmPassword" class="alert alert-danger" role="alert">{{ errors.confirmPassword }}</div>
+                        </div>
+
+                    </div>
+                    
+                    <p>Password Strength:</p>
+                    <div class="progress mb-3" style="transform: translateY(-1rem)">
+                        <div class="progress-bar" role="progressbar" aria-label="Password strength" [style]="'width: ' + passwordStrength.perc + '%; background-color: ' + passwordStrength.color"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="profilePictureFile" class="form-label">Profile Picture</label>
+                        <input class="form-control" type="file" id="profilePictureFile" (change)="handlePictureInput($event.target)" accept="image/png, image/jpeg, image/webp" />
+                        <div *ngIf="errors.profilePicture" class="alert alert-danger" role="alert">{{ errors.profilePicture }}</div>
+                    </div>
+                    <div class="mb-3" *ngIf="profilePicture">
+                        <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" [src]="profilePicture.url" alt="Profile picture upload">
+                            <div class="card-body">
+                                <p class="card-text" id="profilePictureName">{{ profilePicture.file.name }}</p>
+                                <p class="card-text" id="profilePictureSize">({{ formatBytes(profilePicture.file.size) }})</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
+
+                    <div *ngIf="errors.signUp" class="alert alert-danger" role="alert">{{ errors.signUp }}</div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
