@@ -15,6 +15,7 @@ import { CreateListingComponent } from './create-listing/create-listing.componen
 import { EditListingComponent } from './edit-listing/edit-listing.component';
 import { AccountIndicComponent } from './account-indic/account-indic.component';
 import { ListingCardComponent } from './listing-card/listing-card.component';
+import { EditAccountComponent } from './edit-account/edit-account.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ListingCardComponent } from './listing-card/listing-card.component';
     EditListingComponent,
     AccountIndicComponent,
     ListingCardComponent,
+    EditAccountComponent,
   ],
   imports: [
     BrowserModule,
