@@ -1,10 +1,12 @@
-<nav class="navbar navbar-dark bg-dark justify-content-between">
+<nav id="nav" class="navbar navbar-dark bg-dark justify-content-between">
     <div>
         <a class="navbar-brand" routerLink="/">Buy/Sell</a>
         <button *ngIf="jwt" type="button" class="btn btn-success" routerLink="/create-listing">Create Listing</button>
     </div>
     <div class="d-flex flex-row">
         <app-sign-in *ngIf="!jwt"></app-sign-in>
+        <p class="" style="color: white; margin-left: 0.5rem; padding-right: 0.5rem; transform: translateY(0.4rem);">OR</p>
+        <app-sign-up *ngIf="!jwt"></app-sign-up>
         <app-account-indic *ngIf="jwt && jwt !== 'exp'"></app-account-indic>
         <div *ngIf="jwt" class="d-inline">
             <button (click)="signOut()" type="button" class="btn btn-primary">Sign Out</button>
