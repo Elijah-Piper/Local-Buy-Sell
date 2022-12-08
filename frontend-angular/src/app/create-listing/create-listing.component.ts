@@ -229,8 +229,8 @@ export class CreateListingComponent implements OnInit {
     } else if (this.description.value.length < 15) {
       this.errors.description = "Description is too short, must be 15 characters or more";
       return false;
-    } else if (this.description.value.length > 1000) {
-      this.errors.description = "Description is too long, 1000 characters maximum";
+    } else if (this.description.value.length > 25000) {
+      this.errors.description = "Description is too long, 25,000 characters maximum";
       return false;
     } else {
       this.errors.description = "";
