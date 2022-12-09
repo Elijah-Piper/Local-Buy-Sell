@@ -5,7 +5,7 @@
     </div>
     <div class="d-flex flex-row">
         <app-sign-in *ngIf="!jwt"></app-sign-in>
-        <p class="" style="color: white; margin-left: 0.5rem; padding-right: 0.5rem; transform: translateY(0.4rem);">OR</p>
+        <p *ngIf="! jwt" class="" style="color: white; margin-left: 0.5rem; padding-right: 0.5rem; transform: translateY(0.4rem);">OR</p>
         <app-sign-up *ngIf="!jwt"></app-sign-up>
         <app-account-indic *ngIf="jwt && jwt !== 'exp'"></app-account-indic>
         <div *ngIf="jwt" class="d-inline">
