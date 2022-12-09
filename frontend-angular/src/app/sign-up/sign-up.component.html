@@ -25,11 +25,11 @@
                     </div>
 
                     <div class="mb-3">
-                        <select class="form-select" aria-label="Contact method select">
-                            <option selected>Preferred contact method</option>
+                        <select class="form-select" aria-label="Contact method select" formControlName="contactMethod">
+                            <option value="" selected disabled>Preferred contact method</option>
                             <option value="email">Email</option>
-                            <option *ngIf="phoneNumber?.value != null" value="text">Text</option>
-                            <option *ngIf="phoneNumber?.value != null" value="call">Call</option>
+                            <option *ngIf="phoneNumber?.value != ''" value="text">Text</option>
+                            <option *ngIf="phoneNumber?.value != ''" value="call">Call</option>
                         </select>
                         <div *ngIf="errors.contactMethod" class="alert alert-danger" role="alert">{{ errors.contactMethod }}</div>
                     </div>

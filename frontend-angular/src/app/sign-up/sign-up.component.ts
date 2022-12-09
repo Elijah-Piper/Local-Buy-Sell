@@ -65,7 +65,6 @@ export class SignUpComponent implements OnInit {
   }
 
   get lastName() {
-    console.log("Last Name: " + this.signUpForm.get('lastName')?.value)
     return this.signUpForm.get('lastName');
   }
 
@@ -155,17 +154,30 @@ export class SignUpComponent implements OnInit {
   }
 
   createAccount() {
-    const account = {
-      email: this.email?.value,
-      phoneNumber: this.phoneNumber?.value,
-      firstName: this.firstName?.value,
-      lastName: this.lastName?.value,
-      password: this.password?.value
-    }
+    let account = {}
 
-    this.http.post(this.ROOT_URL + '/create', account).subscribe((response) => {
+    if (this.phoneNumber?.value !== '') {
+      account = {
+        email: this.email?.value,
+        phoneNumber: this.phoneNumber?.value,
+        firstName: this.firstName?.value,
+        lastName: this.lastName?.value,
+        password: this.password?.value
+      }
+    } else {
+      account = {
+        email: this.email?.value,
+        firstName: this.firstName?.value,
+        lastName: this.lastName?.value,
+        password: this.password?.value
+      }
+    }
+    
+
+    this.http.post(this.ROOT_URL + '/account/create', account).subscribe((response: any) => {
       console.log("Account creation successful");
-      console.log(response);
+      
+      this.setProfilePicture(response.accountId);
     }, (error) => {
       console.log("HTTP ERROR:");
       console.log(error);
@@ -180,6 +192,11 @@ export class SignUpComponent implements OnInit {
 
     this.http.post(this.ROOT_URL + `/image/createprofilepicture/${accountId}`, httpBody, {
       headers: httpHeaders
+    }).subscribe((response: any) => {
+      console.log("Profile Picture Successfully Set!!!");
+    }, (error) => {
+      console.log("HTTP ERROR SETTING PROFILE PICTURE:");
+      console.log(error);
     })
   }
 
@@ -203,7 +220,10 @@ export class SignUpComponent implements OnInit {
     if (this.phoneNumber === null) {
       this.errors.phoneNumber = "ERROR: The form control was returned as null";
       return false;
-    } else if (! this.phoneNumber.value?.match('^[0-9]+$')) {
+    } else if (this.phoneNumber.value === '') {
+      this.errors.phoneNumber = '';
+      return true;
+    } else if ((! this.phoneNumber.value?.match('^[0-9]+$'))) {
       this.errors.phoneNumber = "Cannot contain anything but numbers"
       return false;
     } else if (this.phoneNumber.value.length > 0 && (this.phoneNumber.value.length < 10 || this.phoneNumber.value.length > 10)) {
@@ -322,7 +342,6 @@ export class SignUpComponent implements OnInit {
       this.errors.signUp = '';
       return true;
     } else {
-      console.log(this.errors);
       this.errors.signUp = "One or more of your fields are invalid";
       return false;
     }
@@ -330,9 +349,9 @@ export class SignUpComponent implements OnInit {
 
   onSubmit() {
     if (this.validate()) {
-      console.log("Success");
+      this.createAccount();
     } else {
-      console.log("Failure");
+      console.log("Validation Failure");
     }
   }
 
