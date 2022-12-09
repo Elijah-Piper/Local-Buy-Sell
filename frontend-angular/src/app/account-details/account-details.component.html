@@ -7,7 +7,7 @@
             <p class="lead">Phone: {{ account.phoneNumber }}</p>
             <p class="lead">Preferred contact method: {{ account.contactMethod }}</p>
             <p class="lead">
-              <a class="btn btn-warning btn-lg" id="editAccountBtn" href="#" role="button">Edit preferences/info</a>
+              <a [routerLink]="'/edit-account/' + account.accountId" class="btn btn-warning btn-lg" id="editAccountBtn" href="#" role="button">Edit preferences/info</a>
             </p>
           </div>
     </div>
